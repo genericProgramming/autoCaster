@@ -1,8 +1,8 @@
 {
-  "device_name": "CleverCast",
+  "device_name": "BoseCast",
   
-  "start_time_schedule" : "every 20 seconds",
-  "end_time_schedule"	: "every 50 seconds",
+  "start_time_schedule" : "at 7:00 am every weekday",
+  "end_time_schedule"	: "at 6:00 pm every weekday",
   
   "media": {
     "contentId": "http://nis.stream.publicradio.org/nis.mp3",

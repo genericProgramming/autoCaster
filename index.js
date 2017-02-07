@@ -15,6 +15,7 @@ var start_schedule = later.parse.text(configuration.start_time_schedule)
 var end_schedule = later.parse.text(configuration.end_time_schedule)
 
 // schedule the shit
+later.date.localTime();
 later.setInterval(eventuallyTakeActionOnAChromecast(loadTheMedia, configuration),start_schedule)
 later.setInterval(eventuallyTakeActionOnAChromecast(stopTheMedia, configuration),end_schedule)
 
