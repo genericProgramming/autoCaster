@@ -29,8 +29,8 @@ Super lazy way to cast someting to a Chromecast at a specified time interval.
 ```
 
 ## Issues with mdns
-https://github.com/agnat/node_mdns/issues/130
-http://stackoverflow.com/questions/29589543/raspberry-pi-mdns-getaddrinfo-3008-error
+- https://github.com/agnat/node_mdns/issues/130
+- http://stackoverflow.com/questions/29589543/raspberry-pi-mdns-getaddrinfo-3008-error
 
 ## TODO 
 - correctly configure mdns instead of the in source modification 
