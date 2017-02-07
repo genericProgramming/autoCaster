@@ -4,6 +4,7 @@ Super lazy way to cast someting to a Chromecast at a specified time interval.
 ## Installation
 1. Run `npm install`
 2. Modify the mdna source as outlined in the linked mdns source articles
+3. Use the autoCast.service file to set this up as a long running process
 
 ## Configuration
 ```javascript
@@ -25,7 +26,6 @@ Super lazy way to cast someting to a Chromecast at a specified time interval.
     }
   }
 }
-
 ```
 
 ## Issues with mdns
