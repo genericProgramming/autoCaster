@@ -1,0 +1,17 @@
+{
+  "device_name": "CleverCast",
+  
+  "start_time_schedule" : "every 20 seconds",
+  "end_time_schedule"	: "every 50 seconds",
+  
+  "media": {
+    "contentId": "http://nis.stream.publicradio.org/nis.mp3",
+    "contentType": "video/mp4",
+    "streamType": "BUFFERED",
+    "metadata": {
+      "type": 3,
+      "metadataType": 0,
+      "title": "MPR"
+    }
+  }
+}
