@@ -4,5 +4,5 @@ http://stackoverflow.com/questions/29589543/raspberry-pi-mdns-getaddrinfo-3008-e
 
 ## TODO 
 - correctly configure mdns instead of the in source modification currently present
-
+- For some reason if both jobs run at the same time, only one succeeds 
 

@@ -1,68 +1,78 @@
 var Client                = require('castv2-client').Client;
 var DefaultMediaReceiver  = require('castv2-client').DefaultMediaReceiver;
 var mdns                  = require('mdns');
+var later				  = require('later');
 
-var browser = mdns.createBrowser(mdns.tcp('googlecast'));
+// Load configuration 
+var fs = require('fs');
+var configFileLocation = process.argv[2]  || 'configuration.json'
+console.log("Using configuration file ", configFileLocation)
+var configuration = JSON.parse(fs.readFileSync(configFileLocation, 'utf8'));
+// TODO validate this dude ^^
 
-browser.on('serviceUp', function(service) {
-  console.log('found device "%s" at %s:%d', service.name, service.addresses[0], service.port);
-  ondeviceup(service.addresses[0]);
-  browser.stop();
-});
+// parse the schedules 
+var start_schedule = later.parse.text(configuration.start_time_schedule)
+var end_schedule = later.parse.text(configuration.end_time_schedule)
 
-browser.start();
+// schedule the shit
+later.setInterval(eventuallyTakeActionOnAChromecast(loadTheMedia, configuration),start_schedule)
+later.setInterval(eventuallyTakeActionOnAChromecast(stopTheMedia, configuration),end_schedule)
 
-function ondeviceup(host) {
+function eventuallyTakeActionOnAChromecast(action, configuration){
+	return () => {
+		console.log('Taking some action');
+		var browser = mdns.createBrowser(mdns.tcp('googlecast'));
+		
+		browser.on('serviceUp', function(service) {
+		  if (service.txtRecord && service.txtRecord.fn === configuration.device_name){
+			action(service.addresses[0], configuration);
+		  }
+		  browser.stop();
+		});
+		browser.start();
+	}
+}
 
-  var client = new Client();
-
-  client.connect(host, function() {
+function loadTheMedia(host, configuration) {
+  connectToTheChromecast(host, function(client) {
     console.log('connected, launching app ...');
 
     client.launch(DefaultMediaReceiver, function(err, player) {
-      var media = {
-
-        // Here you can plug an URL to any mp4, webm, mp3 or jpg file with the proper contentType.
-        contentId: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/big_buck_bunny_1080p.mp4',
-        contentType: 'video/mp4',
-        streamType: 'BUFFERED', // or LIVE
-
-        // Title and cover displayed while buffering
-        metadata: {
-          type: 0,
-          metadataType: 0,
-          title: "Big Buck Bunny", 
-          images: [
-            { url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg' }
-          ]
-        }        
-      };
-
+      player.load(configuration.media, { autoplay: true }, function(err, status) {
+        console.log('media loaded playerState=%s', status.playerState)
+        // disconnect cause who cares?
+        //client.close();
+      });
+      
       player.on('status', function(status) {
         console.log('status broadcast playerState=%s', status.playerState);
       });
-
-      console.log('app "%s" launched, loading media %s ...', player.session.displayName, media.contentId);
-
-      player.load(media, { autoplay: true }, function(err, status) {
-        console.log('media loaded playerState=%s', status.playerState);
-
-        // Seek to 2 minutes after 15 seconds playing.
-        setTimeout(function() {
-          player.seek(2*60, function(err, status) {
-            //
-          });
-        }, 15000);
-
-      });
-
     });
-
   });
+}
+
+function connectToTheChromecast(host, action){
+	var client = new Client();
+
+  client.connect(host, () => {action(client)} );
 
   client.on('error', function(err) {
     console.log('Error: %s', err.message);
     client.close();
   });
+}
 
+function stopTheMedia(host, configuration) {
+	connectToTheChromecast(host, function(client) {
+		console.log('connected, stopping app ...');
+
+		client.launch(DefaultMediaReceiver, function(err, player) {
+			player.stop(function(status) {
+				console.log("Done!",status);
+			});
+			player.on('status', function(status) {
+				console.log('status broadcast playerState=%s', status.playerState);
+			  });
+		});
+	})
 }
