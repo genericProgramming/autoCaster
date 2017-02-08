@@ -1,5 +1,5 @@
 # autoCaster
-Super lazy way to cast someting to a Chromecast at a specified time interval.
+Super lazy way to cast something to a Chromecast at a specified time interval.
 
 ## Installation
 1. Run `npm install`
