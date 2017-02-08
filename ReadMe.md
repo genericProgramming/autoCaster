@@ -35,3 +35,5 @@ Super lazy way to cast something to a Chromecast at a specified time interval.
 ## TODO 
 - correctly configure mdns instead of the in source modification 
 - For some reason if both jobs run at the same time, only one succeeds 
+- Reformat
+- Test
