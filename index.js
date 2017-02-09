@@ -10,12 +10,16 @@ console.log("Using configuration file ", configFileLocation)
 var configuration = JSON.parse(fs.readFileSync(configFileLocation, 'utf8'));
 // TODO validate this dude ^^
 
-// parse the schedules 
+// configure the schedules 
+later.date.localTime();
+
+console.log("Start time schedule is: ", configuration.start_time_schedule)
+console.log("End time schedule is: ", configuration.end_time_schedule)
+
 var start_schedule = later.parse.text(configuration.start_time_schedule)
 var end_schedule = later.parse.text(configuration.end_time_schedule)
 
 // schedule the shit
-later.date.localTime();
 later.setInterval(eventuallyTakeActionOnAChromecast(loadTheMedia, configuration),start_schedule)
 later.setInterval(eventuallyTakeActionOnAChromecast(stopTheMedia, configuration),end_schedule)
 
@@ -42,7 +46,7 @@ function loadTheMedia(host, configuration) {
       player.load(configuration.media, { autoplay: true }, function(err, status) {
         console.log('media loaded playerState=%s', status.playerState)
         // disconnect cause who cares?
-        //client.close();
+        client.close();
       });
       
       player.on('status', function(status) {

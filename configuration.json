@@ -1,7 +1,7 @@
 {
   "device_name": "BoseCast",
   
-  "start_time_schedule" : "at 7:00 am every weekday",
+  "start_time_schedule" : "every 1 h after 8:00 before 5:30 pm every weekday",
   "end_time_schedule"	: "at 6:00 pm every weekday",
   
   "media": {
